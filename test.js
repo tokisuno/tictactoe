@@ -5,9 +5,18 @@ board.setAttribute("class", "board");
 display.appendChild(board);
 
 function Gameboard() {
-    return [[' ', ' ', ' '],
-            [' ', ' ', ' '],
-            [' ', ' ', ' ']];
+    let board = [
+        [' ', ' ', ' '],
+        [' ', ' ', ' '],
+        [' ', ' ', ' ']
+    ];
+
+    let boardClasses = [
+        ["aa", "ab", "ac"],
+        ["ba", "bb", "bc"],
+        ["ca", "cb", "cc"]
+    ];
+    return { board, boardClasses };
 }
 
 function Player(name, mark) {
@@ -38,9 +47,9 @@ function Player(name, mark) {
         // horizontal
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 3; col++) {
-                if (boardArray[row][col] === mark) {
+                if (boardArray.board[row][col] === mark) {
                     count++;
-                    console.log(boardArray[row][col], count);
+                    console.log(boardArray.board[row][col], count);
                     if (count === 3) {
                         this.win();
                         break;
@@ -53,7 +62,7 @@ function Player(name, mark) {
         // vertical
         for (let col = 0; col < 3; col++) {
             for (let row = 0; row < 3; row++) {
-                if (boardArray[row][col] === mark) {
+                if (boardArray.board[row][col] === mark) {
                     count++;
                     if (count === 3) {
                         this.win();
@@ -65,14 +74,14 @@ function Player(name, mark) {
         }
 
         // cross
-        if (boardArray[0][0] === mark &&
-            boardArray[1][1] === mark &&
-            boardArray[2][2] === mark) {
+        if (boardArray.board[0][0] === mark &&
+            boardArray.board[1][1] === mark &&
+            boardArray.board[2][2] === mark) {
             this.win();
         } 
-        if (boardArray[2][0] === mark &&
-            boardArray[1][1] === mark &&
-            boardArray[0][2] === mark) {
+        if (boardArray.board[2][0] === mark &&
+            boardArray.board[1][1] === mark &&
+            boardArray.board[0][2] === mark) {
             this.win();
         }
     }
@@ -109,11 +118,12 @@ function Game() {
         square.textContent = `${playerMoved.mark}`;
         
         playerMoved.moves.push(`${pos}`);
-        for (let i = 0; i < arr_class.length; i++) {
-            for (let j = 0; j < arr_class.length; j++) {
-                if (arr_class[i][j] === pos) {
-                    boardArray[i][j] = `${playerMoved.mark}`;
-                }
+        for (let i = 0; i < boardArray.boardClasses.length; i++) {
+            for (let j = 0; j < boardArray.boardClasses.length; j++) {
+                if (boardArray.boardClasses[i][j] === pos) {
+                    console.log(boardArray.board[i][j]);
+                    boardArray.board[i][j] = `${playerMoved.mark}`;
+                } 
             }
         }
         playerMoved.moved = true;
@@ -185,18 +195,12 @@ player2dom_score.textContent = player2.score;
 let game = new Game(player1, player2);
 let boardArray = new Gameboard();
 
-let arr_class = [
-    ["aa", "ab", "ac"],
-    ["ba", "bb", "bc"],
-    ["ca", "cb", "cc"]
-];
-
 for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
         const square = document.createElement("div");
         square.setAttribute("id", "square");
-        square.setAttribute("class", `${arr_class[i][j]}`);
-        square.textContent = `${boardArray[i][j]}`;
+        square.setAttribute("class", `${boardArray.boardClasses[i][j]}`);
+        square.textContent = `${boardArray.board[i][j]}`;
         board.appendChild(square);
     }
 }
