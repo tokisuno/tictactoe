@@ -87,9 +87,6 @@ function Game() {
     }
 
     this.checkWin = function(player, mark) {
-        if (player1.moves.length === 5 && player2.moves.length === 4) {
-            return;
-        }
         let count = 0;
         
         // horizontal
@@ -99,7 +96,7 @@ function Game() {
                     count++;
                     if (count === 3) {
                         player.win();
-                        break;
+                        return;
                     }
                 } else { count = 0; break; };
             }
@@ -113,7 +110,7 @@ function Game() {
                     count++;
                     if (count === 3) {
                         player.win();
-                        break;
+                        return;
                     }
                 } else { count = 0; break; };
             }
@@ -130,6 +127,11 @@ function Game() {
             boardArray.board[1][1] === mark &&
             boardArray.board[0][2] === mark) {
             player.win();
+	    return;
+        }
+        if (player1.moves.length === 5 && player2.moves.length === 4) {
+            this.tie = true;
+	    this.checkTie();
         }
     }
 
@@ -213,26 +215,50 @@ squares.forEach((square) => {
     square.addEventListener("click", (square) => {
         game.move(square);
         game.checkWin(player1, player1.mark);
-        game.checkWin(player2, player2.mark);
-	game.checkTie();
+	if (player1.win === false) {
+	    game.checkWin(player2, player2.mark);
+	} 
     });
 });
 
-const showBtn = document.querySelector("button.show-options");
+const showBtn = document.querySelectorAll("button.show-options");
 const dialog = document.querySelector("dialog#dialog");
 const submit = dialog.querySelector("input#submit");
-const userInput = dialog.querySelector("input#userInput");
+const input = dialog.querySelector("input#name");
+let tempPlayer = "";
 
-showBtn.addEventListener("click", () => {
-    dialog.showModal();
+showBtn.forEach((button) => {
+    button.addEventListener("click", (e) => {
+	switch (e.target.id) {
+	    case "p1":
+		tempPlayer = "p1"; 
+		break;
+	    case "p2":
+		tempPlayer = "p2";
+		break;
+	}
+	dialog.showModal();
+    });
 });
 
 dialog.addEventListener("close", () => {
-    console.log(dialog.returnValue ==="default" ? "no return value" : `Return value: ${dialog.returnValue}`);
+    input.value = "";
+    //console.log(dialog.returnValue ==="default" ? "no return value" : `Return value: ${dialog.returnValue}`);
 });
 
 submit.addEventListener("click", (e) => {
     e.preventDefault();
-    dialog.close(userInput.value);
+    console.log(dialog.returnValue);
+    switch (tempPlayer) {
+	case "p1":
+	    tempPlayer = "";
+	    player1dom_name.textContent = input.value;
+	    dialog.close(input.value);
+	    break;
+	case "p2":
+	    tempPlayer = "";
+	    player2dom_name.textContent = input.value;
+	    dialog.close(input.value);
+	    break;
+    }
 });
-

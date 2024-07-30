@@ -21,14 +21,15 @@ body {
 .header {
   display: grid;
   text-align: center;
+	align-items: center;
   font-size: 16px;
 	font-family: monospace;
   padding: 10px;
 	color: #d6bd96;
-  gap: 25px;
+  gap: 10px;
 
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: 1fr 2fr;
   grid-template-areas: 
       "player1score player2score"
       "player1name player2name";
@@ -40,6 +41,18 @@ body {
 .player2score { grid-area: player2score; }
 .player2name  { grid-area: player2name;  }
 
+.player1name,
+.player2name {
+	margin: 10px;
+}
+
+button.show-options {
+	background: #bec6a0;
+	border: 1px solid #1a3637;
+}
+button.show-options:hover {
+	background: #fef3e2;
+}
 .board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -49,7 +62,6 @@ body {
     "ba bb bc"
     "ca cb cc";
 	
-	margin: 10px;
 }
 
 .board > #square {

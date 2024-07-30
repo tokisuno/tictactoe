@@ -16,8 +16,8 @@
       <form method="dialog">
         <p>
         <label>
-          Enter username:
-          <input type="text" id="userInput" placeholder="lucas" required />
+          Nickname:
+          <input type="text" id="name" placeholder="lucas" required />
         </label>
         </p>
         <div>
@@ -25,15 +25,20 @@
         </div>
       </form>
     </dialog>
-    <button class="show-options">Options</button>
 
     <div id="game">
       <!--where the game is going to be drawn-->
       <div class="header">
         <div class="player1score">0</div> 
         <div class="player2score">0</div> 
-        <div class="player1name">Lucas</div>
-        <div class="player2name">Fate</div>
+        <div class="name">
+          <div class="player1name"></div>
+          <button class="show-options" id="p1">Options</button>
+        </div>
+        <div class="name">
+          <div class="player2name"></div>
+          <button class="show-options" id="p2">Options</button>
+        </div>
       </div>
     </div>
   </div>
