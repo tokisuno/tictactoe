@@ -236,11 +236,13 @@ submit.addEventListener("click", (e) => {
 	case "p1":
 	    tempPlayer = "";
 	    player1dom_name.textContent = input.value;
+        player1.name = input.value;
 	    dialog.close(input.value);
 	    break;
 	case "p2":
 	    tempPlayer = "";
 	    player2dom_name.textContent = input.value;
+        player2.name = input.value;
 	    dialog.close(input.value);
 	    break;
     }
