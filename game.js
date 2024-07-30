@@ -40,9 +40,9 @@ function Game() {
     this.tie = false;
     this.checkTie = function() {
         if (player1.moves.length === 5 && player2.moves.length === 4) {
-	    game.tie = true;
-	    game.continue();
-	    return;
+            game.tie = true;
+            game.continue();
+            return;
         }
     }
     this.validMove = function(pos) {
@@ -86,52 +86,53 @@ function Game() {
         playerWait.moved = false;
     }
 
-    this.checkWin = function(player, mark) {
+    this.checkWin = function(player, mark, player2, mark2) {
         let count = 0;
-        
+        let players = [player, player2];
+        let marks = [mark, mark2];
         // horizontal
-        for (let row = 0; row < 3; row++) {
-            for (let col = 0; col < 3; col++) {
-                if (boardArray.board[row][col] === mark) {
-                    count++;
-                    if (count === 3) {
-                        player.win();
-                        return;
-                    }
-                } else { count = 0; break; };
-            }
-            count = 0;
-        }
-
-        // vertical
-        for (let col = 0; col < 3; col++) {
+        for (let index = 0; index < 2; index++) {
             for (let row = 0; row < 3; row++) {
-                if (boardArray.board[row][col] === mark) {
-                    count++;
-                    if (count === 3) {
-                        player.win();
-                        return;
-                    }
-                } else { count = 0; break; };
+                for (let col = 0; col < 3; col++) {
+                    if (boardArray.board[row][col] === marks[index]) {
+                        count++;
+                        console.log(marks[index], count);
+                        if (count === 3) {
+                            players[index].win();
+                            return;
+                        }
+                    } else { count = 0; break; };
+                }
+                count = 0;
             }
-            count = 0;
-        }
 
-        // cross
-        if (boardArray.board[0][0] === mark &&
-            boardArray.board[1][1] === mark &&
-            boardArray.board[2][2] === mark) {
-            player.win();
-        } 
-        if (boardArray.board[2][0] === mark &&
-            boardArray.board[1][1] === mark &&
-            boardArray.board[0][2] === mark) {
-            player.win();
-	    return;
-        }
-        if (player1.moves.length === 5 && player2.moves.length === 4) {
-            this.tie = true;
-	    this.checkTie();
+            // vertical
+            for (let col = 0; col < 3; col++) {
+                for (let row = 0; row < 3; row++) {
+                    if (boardArray.board[row][col] === marks[index]) {
+                        count++;
+                        console.log(mark, count);
+                        if (count === 3) {
+                            players[index].win();
+                            return;
+                        }
+                    } else { count = 0; break; };
+                }
+                count = 0;
+            }
+
+            // cross
+            if (boardArray.board[0][0] === marks[index] &&
+                boardArray.board[1][1] === marks[index] &&
+                boardArray.board[2][2] === marks[index]) {
+                players[index].win();
+            } 
+            if (boardArray.board[2][0] === marks[index] &&
+                boardArray.board[1][1] === marks[index] &&
+                boardArray.board[0][2] === marks[index]) {
+                players[index].win();
+                return;
+            }
         }
     }
 
@@ -179,6 +180,7 @@ function Game() {
                         player2.moved = false;
                         player1.won = false;
                         player2.won = false;
+                        game.tie = false;
                         display.appendChild(board);
                         break;
                 }
@@ -202,27 +204,6 @@ player2dom_score.textContent = player2.score;
 let game = new Game(player1, player2);
 let boardArray = new Gameboard();
 
-for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-        const square = document.createElement("div");
-        square.setAttribute("id", "square");
-        square.setAttribute("class", `${boardArray.boardClasses[i][j]}`);
-        square.textContent = `${boardArray.board[i][j]}`;
-        board.appendChild(square);
-    }
-}
-
-const squares = document.querySelectorAll("div#square");
-squares.forEach((square) => {
-    square.addEventListener("click", (square) => {
-        game.move(square);
-        game.checkWin(player1, player1.mark);
-	if (player1.win === false) {
-	    game.checkWin(player2, player2.mark);
-	} 
-    });
-});
-
 const showBtn = document.querySelectorAll("button.show-options");
 const dialog = document.querySelector("dialog#dialog");
 const submit = dialog.querySelector("input#submit");
@@ -232,12 +213,12 @@ let tempPlayer = "";
 showBtn.forEach((button) => {
     button.addEventListener("click", (e) => {
 	switch (e.target.id) {
-	    case "p1":
-		tempPlayer = "p1"; 
-		break;
-	    case "p2":
-		tempPlayer = "p2";
-		break;
+        case "p1":
+            tempPlayer = "p1"; 
+            break;
+        case "p2":
+            tempPlayer = "p2";
+            break;
 	}
 	dialog.showModal();
     });
@@ -263,4 +244,26 @@ submit.addEventListener("click", (e) => {
 	    dialog.close(input.value);
 	    break;
     }
+});
+
+
+for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+        const square = document.createElement("div");
+        square.setAttribute("id", "square");
+        square.setAttribute("class", `${boardArray.boardClasses[i][j]}`);
+        square.textContent = `${boardArray.board[i][j]}`;
+        board.appendChild(square);
+    }
+}
+
+const squares = document.querySelectorAll("div#square");
+squares.forEach((square) => {
+    square.addEventListener("click", (square) => {
+        game.move(square);
+        game.checkWin(player1, player1.mark, player2, player2.mark);
+        if (player1.won === false && player2.won === false && game.tie === false) {
+            this.checkTie();
+        }
+    });
 });
