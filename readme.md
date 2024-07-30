@@ -1,5 +1,8 @@
 # Tic-Tac-Toe (in js)
 
+## Post-project review
+I think in the beginning I was using factories but got really confused and resorted to only using objects and constructors. It's not very elegant but it is functional and looks pretty decent. Feedback appreciated!
+
 ## Project
 1. You are going to store the gameboard as an array inside of a Gameboard object.
 2. Your players are going to be stored in objects.
