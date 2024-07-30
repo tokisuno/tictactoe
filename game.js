@@ -177,6 +177,8 @@ function Game() {
                         player2.moves = [];
                         player1.moved = false;
                         player2.moved = false;
+                        player1.won = false;
+                        player2.won = false;
                         display.appendChild(board);
                         break;
                 }
